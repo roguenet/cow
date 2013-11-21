@@ -27,7 +27,6 @@ public class Block extends LayoutSpriteObject {
         var styles :Styles = Frame.resolveStyles(this);
         if (styles != null && styles.width >= 0) availableSpace.x = styles.width;
         if (styles != null && styles.height >= 0) availableSpace.y = styles.height;
-        trace("CALCULATING BLOCK LAYOUT [" + styles + ", " + availableSpace + "]");
         var minWidth :int = 0;
         var minHeight :int = 0;
         for each (var comp :HasLayout in _components) {

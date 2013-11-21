@@ -74,7 +74,6 @@ public class Frame extends AppMode implements HasLayout {
 
         var compSize :Point = layout(null);
         if (compSize != null && _component is DisplayComponent) {
-            trace("NEW SIZE [" + compSize + "]");
             var disp :DisplayObject = DisplayComponent(_component).display;
             disp.x = (_size.x - compSize.x) / 2;
             disp.y = (_size.y - compSize.y) / 2;
