@@ -46,6 +46,14 @@ public class Styles {
 
     public function get textBuilder () :TextFieldBuilder { return _textBuilder; }
 
+    public function isUndefined (name :String) :Boolean {
+        if (INT_STYLES.indexOf(name) >= 0) return this[name] > int.MIN_VALUE;
+        if (SKIN_STYLES.indexOf(name) >= 0) return this[name] != Skin.NONE;
+        if (TERNARY_STYLES.indexOf(name) >= 0) return this[name] != Ternary.UNKNOWN;
+        if (OBJECT_STYLES.indexOf(name) >= 0) return this[name] != null;
+        throw new Error("Unable to determine definedness of style [" + name + "]");
+    }
+
     internal function appliesTo (classes :Vector.<String>) :Boolean {
         for each (var className :String in classes)
             if (_classes.indexOf(className) >= 0) return true;
@@ -84,6 +92,15 @@ public class Styles {
     protected static function value (obj :Object, name :String, def :*) :* {
         return obj.hasOwnProperty(name) ? obj[name] : def;
     }
+
+    protected static const INT_STYLES :Vector.<String> =
+        new <String>["width", "height", "top", "right", "bottom", "left"];
+    protected static const SKIN_STYLES :Vector.<String> =
+        new <String>["background", "upSkin", "downSkin"];
+    protected static const TERNARY_STYLES :Vector.<String> =
+        new <String>["inline"];
+    protected static const OBJECT_STYLES :Vector.<String> =
+        new <String>["textBuilder"];
 
     protected var _classes :Vector.<String>;
 

@@ -4,6 +4,8 @@ import aspire.util.Log;
 
 import flash.geom.Point;
 
+import flashbang.util.TextFieldBuilder;
+
 import org.roguenet.framed.style.Styles;
 import org.roguenet.framed.style.Ternary;
 
@@ -37,7 +39,9 @@ public class Text extends LayoutSpriteObject {
             return _size = new Point(0, 0);
         }
 
-        var field :TextField = styles.textBuilder.build();
+        var builder :TextFieldBuilder = styles.textBuilder;
+        if (builder == null) builder = Frame.resolveInherited(container, "textBuilder");
+        var field :TextField = builder.build();
         var maxWidth :int = styles.width >= 0 ? styles.width : sizeHint.x;
         field.width = maxWidth;
         field.autoSize = TextFieldAutoSize.VERTICAL;

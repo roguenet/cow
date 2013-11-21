@@ -1,5 +1,7 @@
 package org.roguenet.framed.display {
 
+import aspire.util.Log;
+
 import flash.geom.Point;
 
 import flashbang.components.DisplayComponent;
@@ -24,6 +26,18 @@ public class Frame extends AppMode implements HasLayout {
     public static function createStyleDisplay (comp :HasLayout, name :String) :DisplayObject {
         var frame :Frame = findFrame(comp);
         return frame == null ? null : frame._sheet.createStyleDisplay(name);
+    }
+
+    public static function resolveInherited (comp :HasLayout, name :String) :* {
+        if (comp is Frame) return null;
+        var styles :Styles = resolveStyles(comp);
+        if (!styles.isUndefined(name)) return styles[name];
+        if (comp.container == null) {
+            log.warning("Asked for inherited style of container without a parent", "comp", comp,
+                "name", name);
+            return null;
+        }
+        return resolveInherited(comp.container, name);
     }
 
     public function Frame (sheet :StyleSheet, size :Point) {
@@ -96,5 +110,7 @@ public class Frame extends AppMode implements HasLayout {
     protected var _isValid :BoolValue = new BoolValue(true);
     protected var _size :Point = new Point();
     protected var _component :HasLayout;
+
+    private static const log :Log = Log.getLog(Frame);
 }
 }
