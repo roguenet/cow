@@ -19,7 +19,7 @@ public class Text extends LayoutSpriteObject {
     }
 
     public function get text () :String { return _text; }
-    public function set text (value :String) {
+    public function set text (value :String) :void {
         _text = value == null ? "" : value;
         _isValid.value = false;
     }
