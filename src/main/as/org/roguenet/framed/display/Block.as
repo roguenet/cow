@@ -19,6 +19,7 @@ public class Block extends LayoutSpriteObject {
             addObject(GameObject(comp), comp is DisplayComponent ? _sprite : null);
 
         comp.regs.add(comp.isValid.connect(conditionalInvalidate));
+        comp.container = this;
         return this;
     }
 
@@ -57,7 +58,7 @@ public class Block extends LayoutSpriteObject {
             }
             _bgName = bgName;
             if (_bgName != null) {
-                _background = Frame.createStyleDisplay(this);
+                _background = Frame.createStyleDisplay(this, _bgName);
                 if (_background != null) _sprite.addChildAt(_background, 0);
             }
         }

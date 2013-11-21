@@ -24,7 +24,7 @@ public class LayoutSpriteObject extends SpriteObject implements HasLayout {
         return this;
     }
 
-    public function layout (size :Point) :Point { throw new Error("abstract"); }
+    public function layout (sizeHint :Point) :Point { throw new Error("abstract"); }
 
     protected var _container :HasLayout;
     protected var _isValid :BoolValue = new BoolValue(true);

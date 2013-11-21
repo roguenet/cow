@@ -17,6 +17,6 @@ public interface HasLayout {
     // most HasLayouts will be GameObjects, and get this for free
     function get regs () :Listeners;
 
-    function layout (availableSpace :Point) :Point;
+    function layout (sizeHint :Point) :Point;
 }
 }
