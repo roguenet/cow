@@ -5,6 +5,7 @@ import flash.geom.Point;
 import flashbang.objects.SpriteObject;
 
 import org.roguenet.framed.style.Styles;
+import org.roguenet.framed.style.Ternary;
 
 import react.BoolValue;
 import react.BoolView;
@@ -18,12 +19,17 @@ public class LayoutSpriteObject extends SpriteObject implements HasLayout {
 
     public function get isValid () :BoolView { return _isValid; }
 
-    public function get styles () :Styles {
-        if (_styles == null) _styles = Frame.resolveStyles(this);
-        return _styles;
-    }
-
     public function get classes () :Vector.<String> { return _classes; }
+
+    public function get absoluteLayout () :Boolean { return styles.absoluteLayout; }
+    public function get top () :int { return styles.top; }
+    public function get right () :int { return styles.right; }
+    public function get bottom () :int { return styles.bottom; }
+    public function get left () :int { return styles.left; }
+    public function get inline () :Boolean {
+        // default false
+        return styles.inline == Ternary.TRUE;
+    }
 
     public function addClass (className :String) :LayoutSpriteObject {
         _classes[_classes.length] = className;
@@ -33,6 +39,11 @@ public class LayoutSpriteObject extends SpriteObject implements HasLayout {
     }
 
     public function layout (sizeHint :Point) :Point { throw new Error("abstract"); }
+
+    protected function get styles () :Styles {
+        if (_styles == null) _styles = Frame.resolveStyles(this);
+        return _styles;
+    }
 
     protected var _container :HasLayout;
     protected var _isValid :BoolValue = new BoolValue(true);

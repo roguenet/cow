@@ -13,10 +13,12 @@ public class Styles {
         _bottom = value(styles, "bottom", int.MIN_VALUE);
         _left = value(styles, "left", int.MIN_VALUE);
 
-        _background = createSkin(value(styles, "background", null));
+        _background = skin(value(styles, "background", null));
 
-        _upSkin = createSkin(value(styles, "upSkin", null));
-        _downSkin = createSkin(value(styles, "downSkin", null));
+        _upSkin = skin(value(styles, "upSkin", null));
+        _downSkin = skin(value(styles, "downSkin", null));
+
+        _inline = ternary(value(styles, "inline", null));
     }
 
     public function get width () :int { return _width; }
@@ -35,6 +37,8 @@ public class Styles {
 
     public function get upSkin () :Skin { return _upSkin; }
     public function get downSkin () :Skin { return _downSkin; }
+
+    public function get inline () :Ternary { return _inline; }
 
     internal function appliesTo (classes :Vector.<String>) :Boolean {
         for each (var className :String in classes)
@@ -55,10 +59,18 @@ public class Styles {
 
         if (_upSkin != Skin.NONE) other._upSkin = _upSkin;
         if (_downSkin != Skin.NONE) other._downSkin = _downSkin;
+
+        if (_inline != Ternary.UNKNOWN) other._inline = _inline;
     }
 
-    protected static function createSkin (obj :Object) :Skin {
+    protected static function skin (obj :Object) :Skin {
         return obj == null ? Skin.NONE : new Skin(obj);
+    }
+
+    protected static function ternary (value :*) :Ternary {
+        if (value === true) return Ternary.TRUE;
+        if (value === false) return Ternary.FALSE;
+        return Ternary.UNKNOWN;
     }
 
     protected static function value (obj :Object, name :String, def :*) :* {
@@ -79,5 +91,8 @@ public class Styles {
 
     protected var _upSkin :Skin;
     protected var _downSkin :Skin;
+
+    protected var _inline :Ternary;
 }
 }
+

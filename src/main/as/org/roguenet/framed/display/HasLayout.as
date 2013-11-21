@@ -14,12 +14,18 @@ public interface HasLayout {
 
     function get classes () :Vector.<String>;
 
-    function get styles () :Styles;
-
     function get isValid () :BoolView;
 
     // most HasLayouts will be GameObjects, and get this for free
     function get regs () :Listeners;
+
+    // layout-related styles, with potential default overrides per class
+    function get absoluteLayout () :Boolean;
+    function get top () :int;
+    function get right () :int;
+    function get bottom () :int;
+    function get left () :int;
+    function get inline () :Boolean;
 
     function layout (sizeHint :Point) :Point;
 }

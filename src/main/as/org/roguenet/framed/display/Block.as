@@ -10,7 +10,6 @@ import org.roguenet.framed.style.Skin;
 import org.roguenet.framed.style.Styles;
 
 import starling.display.DisplayObject;
-import starling.display.Sprite;
 
 public class Block extends LayoutSpriteObject {
     public function addComponent (comp :HasLayout) :Block {
@@ -36,8 +35,7 @@ public class Block extends LayoutSpriteObject {
         var curY :int = 0;
         var absolutes :Vector.<HasLayout> = new <HasLayout>[];
         for each (var comp :HasLayout in _components) {
-            var compStyles :Styles = comp.styles;
-            if (compStyles.absoluteLayout) {
+            if (comp.absoluteLayout) {
                 absolutes[absolutes.length] = comp;
                 continue;
             }
@@ -63,25 +61,24 @@ public class Block extends LayoutSpriteObject {
         // absolutes get laid out after we know our real size.
         if (absolutes.length > 0) {
             for each (comp in absolutes) {
-                compStyles = comp.styles;
                 var width :int = 0;
                 var height :int = 0;
                 // only give a size hint > 0 if a layout has both left and right set.
-                if (compStyles.left > int.MIN_VALUE && compStyles.right > int.MIN_VALUE)
-                    width = minWidth - compStyles.left + compStyles.right;
-                if (compStyles.top > int.MIN_VALUE && compStyles.bottom > int.MIN_VALUE)
-                    height = minHeight - compStyles.top + compStyles.bottom;
+                if (comp.left > int.MIN_VALUE && comp.right > int.MIN_VALUE)
+                    width = minWidth - comp.left + comp.right;
+                if (comp.top > int.MIN_VALUE && comp.bottom > int.MIN_VALUE)
+                    height = minHeight - comp.top + comp.bottom;
 
                 size = comp.layout(new Point(width, height));
                 if (comp is DisplayComponent) {
                     display = DisplayComponent(comp).display;
-                    if (compStyles.left > int.MIN_VALUE) display.x = compStyles.left;
-                    else if (compStyles.right > int.MIN_VALUE)
-                        display.x = minWidth - size.x + compStyles.right;
+                    if (comp.left > int.MIN_VALUE) display.x = comp.left;
+                    else if (comp.right > int.MIN_VALUE)
+                        display.x = minWidth - size.x + comp.right;
                     else display.x = 0;
-                    if (compStyles.top > int.MIN_VALUE) display.y = compStyles.top;
-                    else if (compStyles.bottom > int.MIN_VALUE)
-                        display.y = minHeight - size.y + compStyles.bottom;
+                    if (comp.top > int.MIN_VALUE) display.y = comp.top;
+                    else if (comp.bottom > int.MIN_VALUE)
+                        display.y = minHeight - size.y + comp.bottom;
                     else display.y = 0;
                 }
             }
