@@ -1,12 +1,16 @@
-cow
-===
+framed
+======
 
-Collection of Widgets - lightweight Starling UI
+Starling layout and styling atop Flashbang
 
-A couple of widgets that are useful for unencumbered UI. I'm not going to try to make them do everything; 
-just what I need or is requested of me. Because I use them, cow also uses these choice libraries:
+As lightweight an approach as I can manage to doing simple layout of blocks in a flashbang-starling
+environment. The goal here is not to provide an all-singing all-dancing UI toolkit, but to do
+something that is minimal but useful for UI in games.
+
+Because I use them, framed also uses these choice libraries:
  * [Starling](https://github.com/PrimaryFeather/Starling-Framework)
  * [Flashbang-starling](https://github.com/tconkling/flashbang-starling)
  * [Aspire](https://github.com/tconkling/aspire) (dependency of flashbang-starling)
  * [React-as3](https://github.com/tconkling/react-as3) (also a dep of flashbang-starling)
- * [Feathers](https://github.com/joshtynjala/feathers) (not a dependency - A couple of one-off classes taken from this excellent Starling UI framework)
+ * [Feathers](https://github.com/joshtynjala/feathers) (not a dependency - A couple of one-off
+classes taken from this excellent Starling UI framework)
