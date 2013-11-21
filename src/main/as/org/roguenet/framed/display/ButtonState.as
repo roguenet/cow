@@ -2,6 +2,7 @@ package org.roguenet.framed.display {
 
 import aspire.util.Enum;
 
+import org.roguenet.framed.style.Skin;
 import org.roguenet.framed.style.Styles;
 
 public class ButtonState extends Enum {
@@ -17,16 +18,14 @@ public class ButtonState extends Enum {
         return Enum.valueOf(ButtonState, name) as ButtonState;
     }
 
-    public function skinName (styles :Styles) :String {
-        return styles[_skinClass];
-    }
+    public function skin (styles :Styles) :Skin { return styles[_skin]; }
 
     /* @private */
-    public function ButtonState (name :String, skinClass :String) {
+    public function ButtonState (name :String, skin :String) {
         super(name);
-        _skinClass = skinClass;
+        _skin = skin;
     }
 
-    protected var _skinClass :String;
+    protected var _skin :String;
 }
 }

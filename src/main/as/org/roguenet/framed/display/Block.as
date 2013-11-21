@@ -5,6 +5,7 @@ import flash.geom.Point;
 import flashbang.components.DisplayComponent;
 import flashbang.core.GameObject;
 
+import org.roguenet.framed.style.Skin;
 import org.roguenet.framed.style.Styles;
 
 import starling.display.DisplayObject;
@@ -27,8 +28,8 @@ public class Block extends LayoutSpriteObject {
         if (_isValid.value) return _size.clone();
 
         var styles :Styles = this.styles;
-        if (styles != null && styles.width >= 0) sizeHint.x = styles.width;
-        if (styles != null && styles.height >= 0) sizeHint.y = styles.height;
+        if (styles.width >= 0) sizeHint.x = styles.width;
+        if (styles.height >= 0) sizeHint.y = styles.height;
         var minWidth :int = 0;
         var minHeight :int = 0;
         var curY :int = 0;
@@ -55,8 +56,8 @@ public class Block extends LayoutSpriteObject {
         }
 
         // always report our styled width and height, if set
-        if (styles != null && styles.width >= 0) minWidth = styles.width;
-        if (styles != null && styles.height >= 0) minHeight = styles.height;
+        if (styles.width >= 0) minWidth = styles.width;
+        if (styles.height >= 0) minHeight = styles.height;
 
         // absolutes get laid out after we know our real size.
         if (absolutes.length > 0) {
@@ -85,26 +86,27 @@ public class Block extends LayoutSpriteObject {
             }
         }
 
-        var bgName :String = styles == null ? null : styles.background;
-        if (bgName != _bgName) {
+        if (styles.background != _bgSkin) {
             if (_background != null) {
                 _background.removeFromParent();
                 _background = null;
             }
-            _bgName = bgName;
-            if (_bgName != null) {
-                _background = Frame.createStyleDisplay(this, _bgName);
+            _bgSkin = styles.background;
+            if (_bgSkin.name != null) {
+                _background = Frame.createStyleDisplay(this, _bgSkin.name);
                 if (_background != null) _sprite.addChildAt(_background, 0);
             }
         }
         if (_background != null) {
-            _background.width = minWidth;
-            _background.height = minHeight;
+            if (_bgSkin.scale) {
+                _background.width = minWidth;
+                _background.height = minHeight;
+            }
             if (_background is Sprite) Sprite(_background).flatten();
         }
 
         _isValid.value = true;
-        return new Point(minWidth, minHeight);
+        return (_size = new Point(minWidth, minHeight)).clone();
     }
 
     protected function conditionalInvalidate (value :Boolean) :void {
@@ -115,6 +117,6 @@ public class Block extends LayoutSpriteObject {
 
     protected var _size :Point = new Point(0, 0);
     protected var _background :DisplayObject;
-    protected var _bgName :String;
+    protected var _bgSkin :Skin;
 }
 }

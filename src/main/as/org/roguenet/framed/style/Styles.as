@@ -13,10 +13,10 @@ public class Styles {
         _bottom = value(styles, "bottom", int.MIN_VALUE);
         _left = value(styles, "left", int.MIN_VALUE);
 
-        _background = value(styles, "background", null);
+        _background = createSkin(value(styles, "background", null));
 
-        _upSkin = value(styles, "upSkin", null);
-        _downSkin = value(styles, "downSkin", null);
+        _upSkin = createSkin(value(styles, "upSkin", null));
+        _downSkin = createSkin(value(styles, "downSkin", null));
     }
 
     public function get width () :int { return _width; }
@@ -31,10 +31,10 @@ public class Styles {
     public function get bottom () :int { return _bottom; }
     public function get left () :int { return _left; }
 
-    public function get background () :String { return _background; }
+    public function get background () :Skin { return _background; }
 
-    public function get upSkin () :String { return _upSkin; }
-    public function get downSkin () :String { return _downSkin; }
+    public function get upSkin () :Skin { return _upSkin; }
+    public function get downSkin () :Skin { return _downSkin; }
 
     internal function appliesTo (classes :Vector.<String>) :Boolean {
         for each (var className :String in classes)
@@ -51,10 +51,14 @@ public class Styles {
         if (_bottom > int.MIN_VALUE) other._bottom = _bottom;
         if (_left > int.MIN_VALUE) other._left = _left;
 
-        if (_background != null) other._background = _background;
+        if (_background != Skin.NONE) other._background = _background;
 
-        if (_upSkin != null) other._upSkin = _upSkin;
-        if (_downSkin != null) other._downSkin = _downSkin;
+        if (_upSkin != Skin.NONE) other._upSkin = _upSkin;
+        if (_downSkin != Skin.NONE) other._downSkin = _downSkin;
+    }
+
+    protected static function createSkin (obj :Object) :Skin {
+        return obj == null ? Skin.NONE : new Skin(obj);
     }
 
     protected static function value (obj :Object, name :String, def :*) :* {
@@ -71,9 +75,9 @@ public class Styles {
     protected var _bottom :int;
     protected var _left :int;
 
-    protected var _background :String;
+    protected var _background :Skin;
 
-    protected var _upSkin :String;
-    protected var _downSkin :String;
+    protected var _upSkin :Skin;
+    protected var _downSkin :Skin;
 }
 }

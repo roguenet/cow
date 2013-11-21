@@ -2,6 +2,7 @@ package org.roguenet.framed.display {
 
 import flash.geom.Point;
 
+import org.roguenet.framed.style.Skin;
 import org.roguenet.framed.style.Styles;
 
 import react.SignalView;
@@ -10,7 +11,7 @@ import react.UnitSignal;
 import starling.display.DisplayObject;
 import starling.events.Touch;
 
-public class Button extends LayoutSpriteObject {
+public class Button extends Block {
     public function get clicked () :SignalView { return _clicked; }
 
     override protected function added () :void {
@@ -51,41 +52,45 @@ public class Button extends LayoutSpriteObject {
     }
 
     protected function updateSkin () :void {
-        if (_upSkin != null) _upSkin.visible = _state == ButtonState.UP;
-        if (_downSkin != null) _downSkin.visible = _state == ButtonState.DOWN;
+        if (_up != null) _up.visible = _state == ButtonState.UP;
+        if (_down != null) _down.visible = _state == ButtonState.DOWN;
     }
 
     override public function layout (sizeHint :Point) :Point {
+        if (_isValid.value) return super.layout(sizeHint);
+
+        var size :Point = super.layout(sizeHint);
         var styles :Styles = this.styles;
-        if (styles == null) {
-            _isValid.value = true;
-            return new Point(0, 0);
+        if (styles == null) return size;
+
+        var upSkin :Skin = ButtonState.UP.skin(styles);
+        if (upSkin != _upSkin) {
+            _upSkin = upSkin;
+            if (_up != null) _up.removeFromParent();
+            if (_upSkin.name != null) _up = Frame.createStyleDisplay(this, _upSkin.name);
+        }
+        if (_up != null) {
+            if (_up.parent != _sprite) _sprite.addChildAt(_up, _background == null ? 0 : 1);
+            if (_upSkin.scale) {
+                _up.width = size.x;
+                _up.height = size.y;
+            }
         }
 
-        var size :Point = new Point(0, 0);
-        if (!_isValid.value) {
-            if (_upSkin != null) _upSkin.removeFromParent();
-            _upSkin = Frame.createStyleDisplay(this, ButtonState.UP.skinName(styles));
+        var downSkin :Skin = ButtonState.DOWN.skin(styles);
+        if (downSkin != _downSkin) {
+            _downSkin = downSkin;
+            if (_down != null) _down.removeFromParent();
+            if (_downSkin.name != null) _down = Frame.createStyleDisplay(this, _downSkin.name);
         }
-        if (_upSkin != null) {
-            if (_upSkin.parent != _sprite) _sprite.addChild(_upSkin);
-            size.x = Math.max(size.x, _upSkin.width);
-            size.y = Math.max(size.y, _upSkin.height);
-            _upSkin.visible = false;
-        }
-
-        if (!_isValid.value) {
-            if (_downSkin != null) _downSkin.removeFromParent();
-            _downSkin = Frame.createStyleDisplay(this, ButtonState.DOWN.skinName(styles));
-        }
-        if (_downSkin != null) {
-            if (_downSkin.parent != _sprite) _sprite.addChild(_downSkin);
-            size.x = Math.max(size.x, _downSkin.width);
-            size.y = Math.max(size.y, _downSkin.height);
-            _downSkin.visible = false;
+        if (_down != null) {
+            if (_down.parent != _sprite) _sprite.addChildAt(_down, _background == null ? 0 : 1);
+            if (_downSkin.scale) {
+                _down.width = size.x;
+                _down.height = size.y;
+            }
         }
 
-        _isValid.value = true;
         updateSkin();
         return size;
     }
@@ -93,7 +98,7 @@ public class Button extends LayoutSpriteObject {
     protected var _clicked :UnitSignal = new UnitSignal();
     protected var _clickTouchId :int = -1;
     protected var _state :ButtonState = ButtonState.UP;
-    protected var _upSkin :DisplayObject;
-    protected var _downSkin :DisplayObject;
+    protected var _upSkin :Skin, _downSkin :Skin;
+    protected var _up :DisplayObject, _down :DisplayObject;
 }
 }
