@@ -23,28 +23,53 @@ public class Block extends LayoutSpriteObject {
         return this;
     }
 
-    override public function layout (availableSpace :Point) :Point {
-        if (_isValid.value) _size.clone();
+    override public function layout (sizeHint :Point) :Point {
+        if (_isValid.value) return _size.clone();
 
-        var styles :Styles = Frame.resolveStyles(this);
-        if (styles != null && styles.width >= 0) availableSpace.x = styles.width;
-        if (styles != null && styles.height >= 0) availableSpace.y = styles.height;
+        var styles :Styles = this.styles;
+        if (styles != null && styles.width >= 0) sizeHint.x = styles.width;
+        if (styles != null && styles.height >= 0) sizeHint.y = styles.height;
         var minWidth :int = 0;
         var minHeight :int = 0;
+        var curY :int = 0;
         for each (var comp :HasLayout in _components) {
-            var pos :Point = new Point(minWidth, minHeight);
-            var size :Point = comp.layout(availableSpace.clone());
+            var size :Point = comp.layout(sizeHint.clone());
 
+            var absolutePosition :Boolean = false;
             if (comp is DisplayComponent) {
                 var display :DisplayObject = DisplayComponent(comp).display;
-                display.x = pos.x;
-                display.y = pos.y;
+                var compStyles :Styles = comp.styles;
+                display.x = 0;
+                display.y = curY;
+                if (compStyles.left > int.MIN_VALUE) {
+                    display.x += compStyles.left;
+                    absolutePosition = true;
+                } else if (compStyles.right > int.MIN_VALUE) {
+                    display.x = sizeHint.x - size.x + compStyles.right;
+                    absolutePosition = true;
+                    // don't stretch our container to accommodate children that have placed
+                    // themselves outside of our bounds
+                    minWidth = Math.min(sizeHint.x, sizeHint.x + compStyles.right);
+                }
+                if (compStyles.top > int.MIN_VALUE) {
+                    display.y += compStyles.top;
+                    absolutePosition = true;
+                } else if (compStyles.bottom > int.MIN_VALUE) {
+                    display.y = sizeHint.y - size.y + compStyles.bottom;
+                    absolutePosition = true;
+                    // don't stretch our container to accommodate children that have placed
+                    // themselves outside of our bounds
+                    minHeight = Math.min(sizeHint.y, sizeHint.y + compStyles.bottom);
+                }
             }
 
             // expand the minWidth, but keep the available width the same for future comp layout
-            minWidth = Math.max(minWidth, size.x);
-            minHeight = Math.max(minHeight, pos.y + size.y);
-            availableSpace.y = Math.max(0, availableSpace.y - size.y);
+            if (!absolutePosition) {
+                minWidth = Math.max(minWidth, size.x);
+                minHeight = Math.max(minHeight, curY + size.y);
+                sizeHint.y = Math.max(0, sizeHint.y - size.y);
+                curY = curY + size.y;
+            }
         }
         // always report our styled width and height, if set
         if (styles != null && styles.width >= 0) minWidth = styles.width;

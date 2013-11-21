@@ -32,6 +32,7 @@ public class Frame extends AppMode implements HasLayout {
     }
 
     public function get classes () :Vector.<String> { return null; }
+    public function get styles () :Styles { return null; }
     public function get isValid () :BoolView { return _isValid; }
     public function get regs () :Listeners { return _regs; }
 

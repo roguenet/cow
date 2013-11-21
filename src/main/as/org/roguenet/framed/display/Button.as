@@ -56,31 +56,36 @@ public class Button extends LayoutSpriteObject {
     }
 
     override public function layout (sizeHint :Point) :Point {
-        var styles :Styles = Frame.resolveStyles(this);
+        var styles :Styles = this.styles;
         if (styles == null) {
             _isValid.value = true;
             return new Point(0, 0);
         }
 
         var size :Point = new Point(0, 0);
-        if (_upSkin != null) _upSkin.removeFromParent();
-        _upSkin = Frame.createStyleDisplay(this, ButtonState.UP.skinName(styles));
+        if (!_isValid.value) {
+            if (_upSkin != null) _upSkin.removeFromParent();
+            _upSkin = Frame.createStyleDisplay(this, ButtonState.UP.skinName(styles));
+        }
         if (_upSkin != null) {
-            _sprite.addChild(_upSkin);
+            if (_upSkin.parent != _sprite) _sprite.addChild(_upSkin);
             size.x = Math.max(size.x, _upSkin.width);
             size.y = Math.max(size.y, _upSkin.height);
             _upSkin.visible = false;
         }
 
-        if (_downSkin != null) _downSkin.removeFromParent();
-        _downSkin = Frame.createStyleDisplay(this, ButtonState.DOWN.skinName(styles));
+        if (!_isValid.value) {
+            if (_downSkin != null) _downSkin.removeFromParent();
+            _downSkin = Frame.createStyleDisplay(this, ButtonState.DOWN.skinName(styles));
+        }
         if (_downSkin != null) {
-            _sprite.addChild(_downSkin);
+            if (_downSkin.parent != _sprite) _sprite.addChild(_downSkin);
             size.x = Math.max(size.x, _downSkin.width);
             size.y = Math.max(size.y, _downSkin.height);
             _downSkin.visible = false;
         }
 
+        _isValid.value = true;
         updateSkin();
         return size;
     }

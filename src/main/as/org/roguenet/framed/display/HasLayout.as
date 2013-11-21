@@ -4,6 +4,8 @@ import flash.geom.Point;
 
 import flashbang.util.Listeners;
 
+import org.roguenet.framed.style.Styles;
+
 import react.BoolView;
 
 public interface HasLayout {
@@ -11,6 +13,8 @@ public interface HasLayout {
     function set container (value :HasLayout) :void;
 
     function get classes () :Vector.<String>;
+
+    function get styles () :Styles;
 
     function get isValid () :BoolView;
 
