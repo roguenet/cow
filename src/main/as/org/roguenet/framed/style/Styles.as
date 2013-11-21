@@ -1,5 +1,7 @@
 package org.roguenet.framed.style {
 
+import flashbang.util.TextFieldBuilder;
+
 public class Styles {
     public function Styles (classes :Vector.<String>, styles :Object = null) {
         _classes = classes;
@@ -19,6 +21,8 @@ public class Styles {
         _downSkin = skin(value(styles, "downSkin", null));
 
         _inline = ternary(value(styles, "inline", null));
+
+        _textBuilder = value(styles, "textBuilder", null);
     }
 
     public function get width () :int { return _width; }
@@ -39,6 +43,8 @@ public class Styles {
     public function get downSkin () :Skin { return _downSkin; }
 
     public function get inline () :Ternary { return _inline; }
+
+    public function get textBuilder () :TextFieldBuilder { return _textBuilder; }
 
     internal function appliesTo (classes :Vector.<String>) :Boolean {
         for each (var className :String in classes)
@@ -61,6 +67,8 @@ public class Styles {
         if (_downSkin != Skin.NONE) other._downSkin = _downSkin;
 
         if (_inline != Ternary.UNKNOWN) other._inline = _inline;
+
+        if (_textBuilder != null) other._textBuilder = _textBuilder;
     }
 
     protected static function skin (obj :Object) :Skin {
@@ -93,6 +101,8 @@ public class Styles {
     protected var _downSkin :Skin;
 
     protected var _inline :Ternary;
+
+    protected var _textBuilder :TextFieldBuilder;
 }
 }
 

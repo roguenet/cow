@@ -25,9 +25,10 @@ public class Block extends LayoutSpriteObject {
     }
 
     override public function layout (sizeHint :Point) :Point {
-        if (_isValid.value) return _size.clone();
+        if (_isValid.value) return _size;
 
         var styles :Styles = this.styles;
+        sizeHint = sizeHint.clone();
         if (styles.width >= 0) sizeHint.x = styles.width;
         if (styles.height >= 0) sizeHint.y = styles.height;
         var minWidth :int = 0;
@@ -40,7 +41,7 @@ public class Block extends LayoutSpriteObject {
                 continue;
             }
 
-            var size :Point = comp.layout(sizeHint.clone());
+            var size :Point = comp.layout(sizeHint);
             if (comp is DisplayComponent) {
                 var display :DisplayObject = DisplayComponent(comp).display;
                 display.x = 0;
@@ -99,7 +100,7 @@ public class Block extends LayoutSpriteObject {
             _bgSkin.layout(_background, new Rectangle(0, 0, minWidth, minHeight));
 
         _isValid.value = true;
-        return (_size = new Point(minWidth, minHeight)).clone();
+        return _size = new Point(minWidth, minHeight);
     }
 
     protected function conditionalInvalidate (value :Boolean) :void {

@@ -33,6 +33,13 @@ public class Frame extends AppMode implements HasLayout {
 
     public function get classes () :Vector.<String> { return null; }
     public function get styles () :Styles { return null; }
+    public function get absoluteLayout () :Boolean { return false; }
+    public function get top () :int { return 0; }
+    public function get right () :int { return 0; }
+    public function get bottom () :int { return 0; }
+    public function get left () :int { return 0; }
+    public function get inline () :Boolean { return false; }
+
     public function get isValid () :BoolView { return _isValid; }
     public function get regs () :Listeners { return _regs; }
 
@@ -64,7 +71,7 @@ public class Frame extends AppMode implements HasLayout {
             return null;
         }
 
-        var size :Point = _component.layout(_size.clone());
+        var size :Point = _component.layout(_size);
         _isValid.value = true;
         return size;
     }
