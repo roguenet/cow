@@ -1,4 +1,4 @@
-package org.roguenet.cow.display {
+package org.roguenet.framed.display {
 
 import flash.geom.Point;
 
@@ -7,8 +7,8 @@ import flashbang.core.AppMode;
 import flashbang.core.GameObject;
 import flashbang.util.Listeners;
 
-import org.roguenet.cow.style.Styles;
-import org.roguenet.cow.style.StyleSheet;
+import org.roguenet.framed.style.Styles;
+import org.roguenet.framed.style.StyleSheet;
 
 import react.BoolValue;
 import react.BoolView;

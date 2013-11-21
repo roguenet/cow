@@ -1,4 +1,4 @@
-package org.roguenet.cow.style {
+package org.roguenet.framed.style {
 
 public class Styles {
     public function Styles (classes :Vector.<String>, styles :Object = null) {

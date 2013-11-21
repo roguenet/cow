@@ -1,4 +1,4 @@
-package org.roguenet.cow.display {
+package org.roguenet.framed.display {
 
 import flash.geom.Point;
 

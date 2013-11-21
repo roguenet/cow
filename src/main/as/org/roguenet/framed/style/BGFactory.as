@@ -1,4 +1,4 @@
-package org.roguenet.cow.style {
+package org.roguenet.framed.style {
 
 public class BGFactory {
     public function BGFactory (name :String, factory :Function) {

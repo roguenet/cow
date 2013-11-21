@@ -1,4 +1,4 @@
-package org.roguenet.cow.style {
+package org.roguenet.framed.style {
 
 import aspire.util.Map;
 import aspire.util.Maps;

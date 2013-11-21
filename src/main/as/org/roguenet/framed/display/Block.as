@@ -1,11 +1,11 @@
-package org.roguenet.cow.display {
+package org.roguenet.framed.display {
 
 import flash.geom.Point;
 
 import flashbang.components.DisplayComponent;
 import flashbang.core.GameObject;
 
-import org.roguenet.cow.style.Styles;
+import org.roguenet.framed.style.Styles;
 
 import starling.display.DisplayObject;
 import starling.display.Sprite;
