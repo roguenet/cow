@@ -27,8 +27,8 @@ public class LayoutSpriteObject extends SpriteObject implements HasLayout {
     public function get bottom () :int { return styles.bottom; }
     public function get left () :int { return styles.left; }
     public function get inline () :Boolean {
-        // default false
-        return styles.inline == Ternary.TRUE;
+        // default false, absolutes are not inline.
+        return !absoluteLayout && styles.inline == Ternary.TRUE;
     }
 
     public function addClass (className :String) :LayoutSpriteObject {
