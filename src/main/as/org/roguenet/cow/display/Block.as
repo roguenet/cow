@@ -8,6 +8,7 @@ import flashbang.core.GameObject;
 import org.roguenet.cow.style.Styles;
 
 import starling.display.DisplayObject;
+import starling.display.Sprite;
 
 public class Block extends LayoutSpriteObject {
     public function addComponent (comp :HasLayout) :Block {
@@ -63,6 +64,7 @@ public class Block extends LayoutSpriteObject {
         if (_background != null) {
             _background.width = minWidth;
             _background.height = minHeight;
+            if (_background is Sprite) Sprite(_background).flatten();
         }
 
         _isValid.value = true;
