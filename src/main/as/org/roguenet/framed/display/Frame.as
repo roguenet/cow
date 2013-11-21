@@ -21,10 +21,9 @@ public class Frame extends AppMode implements HasLayout {
         return frame == null ? null : frame._sheet.resolve(comp.classes);
     }
 
-    public static function createBackground (comp :HasLayout) :DisplayObject {
+    public static function createStyleDisplay (comp :HasLayout, name :String) :DisplayObject {
         var frame :Frame = findFrame(comp);
-        var styles :Styles = frame == null ? null : frame._sheet.resolve(comp.classes);
-        return styles == null ? null : frame._sheet.createBackground(styles.background);
+        return frame == null ? null : frame._sheet.createStyleDisplay(name);
     }
 
     public function Frame (sheet :StyleSheet, size :Point) {

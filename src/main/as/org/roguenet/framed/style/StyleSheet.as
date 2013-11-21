@@ -6,12 +6,13 @@ import aspire.util.Maps;
 import starling.display.DisplayObject;
 
 public class StyleSheet {
-    public function StyleSheet (styles :Vector.<Styles>, bgFactories :Vector.<BGFactory> = null) {
+    public function StyleSheet (styles :Vector.<Styles>,
+            displayFactories :Vector.<DisplayFactory> = null) {
         _styles = styles;
 
-        if (bgFactories != null)
-            for each (var factory :BGFactory in bgFactories)
-                _bgFactories.put(factory.name, factory);
+        if (displayFactories != null)
+            for each (var factory :DisplayFactory in displayFactories)
+                _displayFactories.put(factory.name, factory);
     }
 
     public function resolve (classes :Vector.<String>) :Styles {
@@ -26,8 +27,8 @@ public class StyleSheet {
         return style;
     }
 
-    public function createBackground (name :String) :DisplayObject {
-        var factory :BGFactory = _bgFactories.get(name);
+    public function createStyleDisplay (name :String) :DisplayObject {
+        var factory :DisplayFactory = _displayFactories.get(name);
         return factory == null ? null : DisplayObject(factory.factory());
     }
 
@@ -37,7 +38,7 @@ public class StyleSheet {
     }
 
     protected var _styles :Vector.<Styles>;
-    protected var _bgFactories :Map = Maps.newMapOf(String);
+    protected var _displayFactories :Map = Maps.newMapOf(String);
     protected var _resolved :Map = Maps.newMapOf(String);
 }
 }

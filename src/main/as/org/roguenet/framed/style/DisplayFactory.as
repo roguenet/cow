@@ -1,7 +1,7 @@
 package org.roguenet.framed.style {
 
-public class BGFactory {
-    public function BGFactory (name :String, factory :Function) {
+public class DisplayFactory {
+    public function DisplayFactory (name :String, factory :Function) {
         _name = name;
         _factory = factory
     }
