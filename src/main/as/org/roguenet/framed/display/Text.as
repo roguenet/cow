@@ -11,7 +11,6 @@ import org.roguenet.framed.style.Ternary;
 
 import starling.text.TextField;
 import starling.text.TextFieldAutoSize;
-import starling.utils.HAlign;
 
 public class Text extends LayoutSpriteObject {
     public function Text (text :String) :void {

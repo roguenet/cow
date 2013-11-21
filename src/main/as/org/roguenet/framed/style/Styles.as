@@ -28,7 +28,7 @@ public class Styles {
     public static function inherit (comp :HasLayout, name :String) :* {
         if (comp is Frame) return null;
         var styles :Styles = resolve(comp);
-        if (!styles.isUndefined(name)) return styles[name];
+        if (styles.isDefined(name)) return styles[name];
         if (comp.container == null) {
             log.warning("Asked for inherited style of container without a parent", "comp", comp,
                 "name", name);
@@ -81,7 +81,7 @@ public class Styles {
 
     public function get textBuilder () :TextFieldBuilder { return _textBuilder; }
 
-    public function isUndefined (name :String) :Boolean {
+    public function isDefined (name :String) :Boolean {
         if (INT_STYLES.indexOf(name) >= 0) return this[name] > int.MIN_VALUE;
         if (SKIN_STYLES.indexOf(name) >= 0) return this[name] != Skin.NONE;
         if (TERNARY_STYLES.indexOf(name) >= 0) return this[name] != Ternary.UNKNOWN;
