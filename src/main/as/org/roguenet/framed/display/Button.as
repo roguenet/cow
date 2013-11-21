@@ -86,7 +86,7 @@ public class Button extends Block {
             _skins.put(state, skin = newSkin);
             if (disp != null) disp.removeFromParent();
             if (skin.name != null)
-                _skinDisplays.put(state, disp = Frame.createStyleDisplay(this, skin.name));
+                _skinDisplays.put(state, disp = Styles.createDisplay(this, skin.name));
         }
         if (disp != null) {
             if (disp.parent != _sprite) _sprite.addChildAt(disp, _background == null ? 0 : 1);

@@ -1,8 +1,43 @@
 package org.roguenet.framed.style {
 
+import aspire.util.Log;
+
 import flashbang.util.TextFieldBuilder;
 
+import org.roguenet.framed.display.Frame;
+import org.roguenet.framed.display.HasLayout;
+
+import starling.display.DisplayObject;
+
 public class Styles {
+    public static function findFrame (comp :HasLayout) :Frame {
+        while (comp != null && !(comp is Frame)) comp = comp.container;
+        return comp == null ? null : Frame(comp);
+    }
+
+    public static function resolve (comp :HasLayout) :Styles {
+        var frame :Frame = findFrame(comp);
+        return frame == null ? null : frame.styleSheet.resolve(comp.classes);
+    }
+
+    public static function createDisplay (comp :HasLayout, name :String) :DisplayObject {
+        var frame :Frame = findFrame(comp);
+        return frame == null ? null : frame.styleSheet.createStyleDisplay(name);
+    }
+
+    public static function inherit (comp :HasLayout, name :String) :* {
+        if (comp is Frame) return null;
+        var styles :Styles = resolve(comp);
+        if (!styles.isUndefined(name)) return styles[name];
+        if (comp.container == null) {
+            log.warning("Asked for inherited style of container without a parent", "comp", comp,
+                "name", name);
+            return null;
+        }
+        return inherit(comp.container, name);
+    }
+
+
     public function Styles (classes :Vector.<String>, styles :Object = null) {
         _classes = classes;
 
@@ -120,6 +155,8 @@ public class Styles {
     protected var _inline :Ternary;
 
     protected var _textBuilder :TextFieldBuilder;
+
+    private static const log :Log = Log.getLog(Styles);
 }
 }
 

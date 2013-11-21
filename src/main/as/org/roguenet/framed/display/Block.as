@@ -92,7 +92,7 @@ public class Block extends LayoutSpriteObject {
             }
             _bgSkin = styles.background;
             if (_bgSkin.name != null) {
-                _background = Frame.createStyleDisplay(this, _bgSkin.name);
+                _background = Styles.createDisplay(this, _bgSkin.name);
                 if (_background != null) _sprite.addChildAt(_background, 0);
             }
         }

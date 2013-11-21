@@ -41,7 +41,7 @@ public class LayoutSpriteObject extends SpriteObject implements HasLayout {
     public function layout (sizeHint :Point) :Point { throw new Error("abstract"); }
 
     protected function get styles () :Styles {
-        if (_styles == null) _styles = Frame.resolveStyles(this);
+        if (_styles == null) _styles = Styles.resolve(this);
         return _styles;
     }
 
