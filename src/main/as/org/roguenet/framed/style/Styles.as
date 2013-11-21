@@ -22,6 +22,10 @@ public class Styles {
     public function get width () :int { return _width; }
     public function get height () :int { return _height; }
 
+    public function get absoluteLayout () :Boolean {
+        return top > int.MIN_VALUE || right > int.MIN_VALUE || bottom > int.MIN_VALUE ||
+            left > int.MIN_VALUE;
+    }
     public function get top () :int { return _top; }
     public function get right () :int { return _right; }
     public function get bottom () :int { return _bottom; }

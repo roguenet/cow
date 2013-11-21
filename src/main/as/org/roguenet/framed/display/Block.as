@@ -32,48 +32,58 @@ public class Block extends LayoutSpriteObject {
         var minWidth :int = 0;
         var minHeight :int = 0;
         var curY :int = 0;
+        var absolutes :Vector.<HasLayout> = new <HasLayout>[];
         for each (var comp :HasLayout in _components) {
-            var size :Point = comp.layout(sizeHint.clone());
+            var compStyles :Styles = comp.styles;
+            if (compStyles.absoluteLayout) {
+                absolutes[absolutes.length] = comp;
+                continue;
+            }
 
-            var absolutePosition :Boolean = false;
+            var size :Point = comp.layout(sizeHint.clone());
             if (comp is DisplayComponent) {
                 var display :DisplayObject = DisplayComponent(comp).display;
-                var compStyles :Styles = comp.styles;
                 display.x = 0;
                 display.y = curY;
-                if (compStyles.left > int.MIN_VALUE) {
-                    display.x += compStyles.left;
-                    absolutePosition = true;
-                } else if (compStyles.right > int.MIN_VALUE) {
-                    display.x = sizeHint.x - size.x + compStyles.right;
-                    absolutePosition = true;
-                    // don't stretch our container to accommodate children that have placed
-                    // themselves outside of our bounds
-                    minWidth = Math.min(sizeHint.x, sizeHint.x + compStyles.right);
-                }
-                if (compStyles.top > int.MIN_VALUE) {
-                    display.y += compStyles.top;
-                    absolutePosition = true;
-                } else if (compStyles.bottom > int.MIN_VALUE) {
-                    display.y = sizeHint.y - size.y + compStyles.bottom;
-                    absolutePosition = true;
-                    // don't stretch our container to accommodate children that have placed
-                    // themselves outside of our bounds
-                    minHeight = Math.min(sizeHint.y, sizeHint.y + compStyles.bottom);
-                }
             }
 
             // expand the minWidth, but keep the available width the same for future comp layout
-            if (!absolutePosition) {
-                minWidth = Math.max(minWidth, size.x);
-                minHeight = Math.max(minHeight, curY + size.y);
-                sizeHint.y = Math.max(0, sizeHint.y - size.y);
-                curY = curY + size.y;
-            }
+            minWidth = Math.max(minWidth, size.x);
+            minHeight = Math.max(minHeight, curY + size.y);
+            sizeHint.y = Math.max(0, sizeHint.y - size.y);
+            curY = curY + size.y;
         }
+
         // always report our styled width and height, if set
         if (styles != null && styles.width >= 0) minWidth = styles.width;
         if (styles != null && styles.height >= 0) minHeight = styles.height;
+
+        // absolutes get laid out after we know our real size.
+        if (absolutes.length > 0) {
+            for each (comp in absolutes) {
+                compStyles = comp.styles;
+                var width :int = 0;
+                var height :int = 0;
+                // only give a size hint > 0 if a layout has both left and right set.
+                if (compStyles.left > int.MIN_VALUE && compStyles.right > int.MIN_VALUE)
+                    width = minWidth - compStyles.left + compStyles.right;
+                if (compStyles.top > int.MIN_VALUE && compStyles.bottom > int.MIN_VALUE)
+                    height = minHeight - compStyles.top + compStyles.bottom;
+
+                size = comp.layout(new Point(width, height));
+                if (comp is DisplayComponent) {
+                    display = DisplayComponent(comp).display;
+                    if (compStyles.left > int.MIN_VALUE) display.x = compStyles.left;
+                    else if (compStyles.right > int.MIN_VALUE)
+                        display.x = minWidth - size.x + compStyles.right;
+                    else display.x = 0;
+                    if (compStyles.top > int.MIN_VALUE) display.y = compStyles.top;
+                    else if (compStyles.bottom > int.MIN_VALUE)
+                        display.y = minHeight - size.y + compStyles.bottom;
+                    else display.y = 0;
+                }
+            }
+        }
 
         var bgName :String = styles == null ? null : styles.background;
         if (bgName != _bgName) {
