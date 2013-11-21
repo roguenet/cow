@@ -1,6 +1,7 @@
 package org.roguenet.framed.display {
 
 import flash.geom.Point;
+import flash.geom.Rectangle;
 
 import flashbang.components.DisplayComponent;
 import flashbang.core.GameObject;
@@ -97,13 +98,8 @@ public class Block extends LayoutSpriteObject {
                 if (_background != null) _sprite.addChildAt(_background, 0);
             }
         }
-        if (_background != null) {
-            if (_bgSkin.scale) {
-                _background.width = minWidth;
-                _background.height = minHeight;
-            }
-            if (_background is Sprite) Sprite(_background).flatten();
-        }
+        if (_background != null)
+            _bgSkin.layout(_background, new Rectangle(0, 0, minWidth, minHeight));
 
         _isValid.value = true;
         return (_size = new Point(minWidth, minHeight)).clone();
