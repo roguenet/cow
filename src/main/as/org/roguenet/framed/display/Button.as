@@ -1,6 +1,10 @@
 package org.roguenet.framed.display {
 
+import aspire.util.Map;
+import aspire.util.Maps;
+
 import flash.geom.Point;
+import flash.geom.Rectangle;
 
 import org.roguenet.framed.style.Skin;
 import org.roguenet.framed.style.Styles;
@@ -52,8 +56,10 @@ public class Button extends Block {
     }
 
     protected function updateSkin () :void {
-        if (_up != null) _up.visible = _state == ButtonState.UP;
-        if (_down != null) _down.visible = _state == ButtonState.DOWN;
+        for each (var state :ButtonState in ButtonState.values()) {
+            var disp :DisplayObject = _skinDisplays.get(state);
+            if (disp != null) disp.visible = _state == state;
+        }
     }
 
     override public function layout (sizeHint :Point) :Point {
@@ -63,42 +69,36 @@ public class Button extends Block {
         var styles :Styles = this.styles;
         if (styles == null) return size;
 
-        var upSkin :Skin = ButtonState.UP.skin(styles);
-        if (upSkin != _upSkin) {
-            _upSkin = upSkin;
-            if (_up != null) _up.removeFromParent();
-            if (_upSkin.name != null) _up = Frame.createStyleDisplay(this, _upSkin.name);
-        }
-        if (_up != null) {
-            if (_up.parent != _sprite) _sprite.addChildAt(_up, _background == null ? 0 : 1);
-            if (_upSkin.scale) {
-                _up.width = size.x;
-                _up.height = size.y;
-            }
-        }
-
-        var downSkin :Skin = ButtonState.DOWN.skin(styles);
-        if (downSkin != _downSkin) {
-            _downSkin = downSkin;
-            if (_down != null) _down.removeFromParent();
-            if (_downSkin.name != null) _down = Frame.createStyleDisplay(this, _downSkin.name);
-        }
-        if (_down != null) {
-            if (_down.parent != _sprite) _sprite.addChildAt(_down, _background == null ? 0 : 1);
-            if (_downSkin.scale) {
-                _down.width = size.x;
-                _down.height = size.y;
-            }
-        }
+        var skinBounds :Rectangle = new Rectangle(0, 0, size.x, size.y);
+        for each (var state :ButtonState in ButtonState.values())
+            setupSkin(state, styles, skinBounds);
 
         updateSkin();
         return size;
     }
 
+    protected function setupSkin (state :ButtonState, styles :Styles, skinBounds :Rectangle) :void {
+        var skin :Skin = _skins.get(state);
+        var disp :DisplayObject = _skinDisplays.get(state);
+
+        var newSkin :Skin = state.skin(styles);
+        if (skin != newSkin) {
+            _skins.put(state, skin = newSkin);
+            if (disp != null) disp.removeFromParent();
+            if (skin.name != null)
+                _skinDisplays.put(state, disp = Frame.createStyleDisplay(this, skin.name));
+        }
+        if (disp != null) {
+            if (disp.parent != _sprite) _sprite.addChildAt(disp, _background == null ? 0 : 1);
+            skin.layout(disp, skinBounds);
+        }
+    }
+
     protected var _clicked :UnitSignal = new UnitSignal();
     protected var _clickTouchId :int = -1;
     protected var _state :ButtonState = ButtonState.UP;
-    protected var _upSkin :Skin, _downSkin :Skin;
-    protected var _up :DisplayObject, _down :DisplayObject;
+
+    protected var _skinDisplays :Map = Maps.newMapOf(ButtonState); // <ButtonState, DisplayObject>
+    protected var _skins :Map = Maps.newMapOf(ButtonState); // <ButtonState, Skin>
 }
 }
