@@ -50,6 +50,29 @@ public class Styles {
         _bottom = value(styles, "bottom", int.MIN_VALUE);
         _left = value(styles, "left", int.MIN_VALUE);
 
+        var padding :* = value(styles, "padding", null);
+        if (padding is int) {
+            _paddingTop = _paddingRight = _paddingBottom = _paddingLeft = padding as int;
+        } else if (padding is Array && (padding as Array).length > 0) {
+            var padArr :Array = padding as Array;
+            if (padArr.length >= 4) {
+                _paddingTop = padArr[0];
+                _paddingRight = padArr[1];
+                _paddingBottom = padArr[2];
+                _paddingLeft = padArr[3];
+            } else if (padArr.length >= 2) {
+                _paddingTop = _paddingBottom = (padding as Array)[0];
+                _paddingRight = _paddingLeft = (padding as Array)[1];
+            } else {
+                _paddingTop = _paddingRight = _paddingBottom = _paddingLeft = (padding as Array)[0];
+            }
+        } else {
+            _paddingTop = value(styles, "paddingTop", int.MIN_VALUE);
+            _paddingRight = value(styles, "paddingRight", int.MIN_VALUE);
+            _paddingBottom = value(styles, "paddingBottom", int.MIN_VALUE);
+            _paddingLeft = value(styles, "paddingLeft", int.MIN_VALUE);
+        }
+
         _background = skin(value(styles, "background", null));
 
         _upSkin = skin(value(styles, "upSkin", null));
@@ -71,6 +94,11 @@ public class Styles {
     public function get right () :int { return _right; }
     public function get bottom () :int { return _bottom; }
     public function get left () :int { return _left; }
+
+    public function get paddingTop () :int { return _paddingTop; }
+    public function get paddingRight () :int { return _paddingRight; }
+    public function get paddingBottom () :int { return _paddingBottom; }
+    public function get paddingLeft () :int { return _paddingLeft; }
 
     public function get background () :Skin { return _background; }
 
@@ -104,6 +132,11 @@ public class Styles {
         if (_bottom > int.MIN_VALUE) other._bottom = _bottom;
         if (_left > int.MIN_VALUE) other._left = _left;
 
+        if (_paddingTop > int.MIN_VALUE) other._paddingTop = _paddingTop;
+        if (_paddingRight > int.MIN_VALUE) other._paddingRight = _paddingRight;
+        if (_paddingBottom > int.MIN_VALUE) other._paddingBottom = _paddingBottom;
+        if (_paddingLeft > int.MIN_VALUE) other._paddingLeft = _paddingLeft;
+
         if (_background != Skin.NONE) other._background = _background;
 
         if (_upSkin != Skin.NONE) other._upSkin = _upSkin;
@@ -129,7 +162,8 @@ public class Styles {
     }
 
     protected static const INT_STYLES :Vector.<String> =
-        new <String>["width", "height", "top", "right", "bottom", "left"];
+        new <String>["width", "height", "top", "right", "bottom", "left", "paddingTop",
+            "paddingRight", "paddingBottom", "paddingLeft"];
     protected static const SKIN_STYLES :Vector.<String> =
         new <String>["background", "upSkin", "downSkin"];
     protected static const TERNARY_STYLES :Vector.<String> =
@@ -146,6 +180,11 @@ public class Styles {
     protected var _right :int;
     protected var _bottom :int;
     protected var _left :int;
+
+    protected var _paddingTop :int;
+    protected var _paddingRight :int;
+    protected var _paddingBottom :int;
+    protected var _paddingLeft :int;
 
     protected var _background :Skin;
 

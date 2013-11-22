@@ -33,8 +33,14 @@ public class Block extends LayoutSpriteObject {
         if (styles.height >= 0) sizeHint.y = styles.height;
         var minWidth :int = 0;
         var minHeight :int = 0;
-        var curY :int = 0;
         var absolutes :Vector.<HasLayout> = new <HasLayout>[];
+        var padTop :int = styles.paddingTop > 0 ? styles.paddingTop : 0;
+        var padRight :int = styles.paddingRight > 0 ? styles.paddingRight : 0;
+        var padBot :int = styles.paddingBottom > 0 ? styles.paddingBottom : 0;
+        var padLeft :int = styles.paddingLeft > 0 ? styles.paddingLeft : 0;
+        sizeHint.x -= padRight + padLeft;
+        sizeHint.y -= padTop + padBot;
+        var curY :int = padTop;
         for each (var comp :HasLayout in _components) {
             if (comp.absoluteLayout) {
                 absolutes[absolutes.length] = comp;
@@ -44,16 +50,17 @@ public class Block extends LayoutSpriteObject {
             var size :Point = comp.layout(sizeHint);
             if (comp is DisplayComponent) {
                 var display :DisplayObject = DisplayComponent(comp).display;
-                display.x = 0;
+                display.x = padLeft;
                 display.y = curY;
             }
 
             // expand the minWidth, but keep the available width the same for future comp layout
-            minWidth = Math.max(minWidth, size.x);
+            minWidth = Math.max(minWidth, size.x + padLeft + padRight);
             minHeight = Math.max(minHeight, curY + size.y);
             sizeHint.y = Math.max(0, sizeHint.y - size.y);
             curY = curY + size.y;
         }
+        minHeight += padBot;
 
         // always report our styled width and height, if set
         if (styles.width >= 0) minWidth = styles.width;
