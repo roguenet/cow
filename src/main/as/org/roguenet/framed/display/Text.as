@@ -9,6 +9,8 @@ import flashbang.util.TextFieldBuilder;
 import org.roguenet.framed.style.Styles;
 import org.roguenet.framed.style.Ternary;
 
+import starling.text.BitmapChar;
+import starling.text.BitmapFont;
 import starling.text.TextField;
 import starling.text.TextFieldAutoSize;
 
@@ -49,9 +51,14 @@ public class Text extends LayoutSpriteObject {
         field.autoSize = TextFieldAutoSize.VERTICAL;
         field.text = _text;
         // if we're multiline, declare that we've taken the full width we laid out with.;
-        var multiline :Boolean = field.height > TextField.getBitmapFont(field.fontName).lineHeight;
-        _size = new Point(multiline ? maxWidth : field.textBounds.width, field.height);
-        if (_size.x != field.width) field.width = _size.x; // resize the field down if it's too big
+        var font :BitmapFont = TextField.getBitmapFont(field.fontName);
+        var multiline :Boolean = field.height > font.lineHeight;
+        var firstChar :BitmapChar = font.getChar(_text.charCodeAt(0));
+        // we must account for the offset of the first character because TextField.textBounds
+        // doesn't, but it is used when laying out next text.
+        var textWidth :int = multiline ? maxWidth : field.textBounds.width + firstChar.xOffset;
+        _size = new Point(textWidth, field.height);
+        if (_size.x != field.width) field.width = _size.x; // resize the field down if it's too big.
 
         if (_field != null) _field.removeFromParent();
         _sprite.addChild(_field = field);
