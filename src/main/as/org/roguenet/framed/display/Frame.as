@@ -33,7 +33,6 @@ public class Frame extends AppMode implements HasLayout {
     public function get inline () :Boolean { return false; }
 
     public function get isValid () :BoolView { return _isValid; }
-    public function get regs () :Listeners { return _regs; }
 
     public function get container () :HasLayout { return null; }
     public function set container (value :HasLayout) :void {
